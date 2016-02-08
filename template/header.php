@@ -10,6 +10,9 @@
         <!-- Bootstrap -->
         <link href="./css/bootstrap.min.css" rel="stylesheet">
 
+        <!-- Custom CSS -->
+        <link href="./css/styles.css" rel="stylesheet">
+
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -22,33 +25,12 @@
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="./js/bootstrap.min.js"></script>
         
-        <style>
-            @import url(https://fonts.googleapis.com/css?family=Open+Sans);
-            
-            * {
-                font-family: 'Open Sans', sans-serif;
-            }
-            
-            .footer {
-                background-color: #f5f5f5;
-                bottom: 0;
-                height: 60px;
-                /*position: absolute;*/
-                width: 100%;
-            }
-            
-            .panel-heading h3 {
-                margin: 0;
-                padding: 0;
-            }
-            
-            label {
-                font-weight: 300;
-            }
-            
-            #playground td {
-                vertical-align: middle;
-            }
-        </style>
+        <!-- Tooltip Init -->
+        <script type="text/javascript">
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            })
+        </script>
+        
     </head>
     <body>
