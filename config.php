@@ -8,7 +8,7 @@ session_start();
 
 $hostname = "localhost";
 $username = "root";
-$password = "root";
+$password = "";
 $database = "mtitphp";
 
 $connection = new mysqli($hostname, $username, $password, $database);
