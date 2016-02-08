@@ -1,4 +1,8 @@
-<?php require_once 'config.php'; ?>
+<?php 
+/**
+ * Basic page to manage user sign in.
+ */
+require_once 'config.php'; ?>
 <?php
 
 $form_data = array(

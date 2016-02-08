@@ -1,4 +1,9 @@
-<?php require_once 'config.php'; ?>
+<?php 
+/**
+ * Basic page to handle user registration.
+ */
+
+require_once 'config.php'; ?>
 <?php
 $form_data = array(
     'first_name' => null,
@@ -8,6 +13,13 @@ $form_data = array(
     'conf_password' => null,
 );
 
+/**
+ * Method to check if the user is already registered for the given email address
+ * 
+ * @param String $email
+ * @param Mixed $connection
+ * @return Boolean
+ */
 function user_exists($email, $connection) {
     $sql = "SELECT * FROM `users` WHERE `email` = '{$email}'";
     $result = $connection->query($sql);
@@ -15,6 +27,12 @@ function user_exists($email, $connection) {
     return $result->num_rows > 0 ? TRUE : FALSE;
 }
 
+/**
+ * Method to create a user in the dabase.
+ * 
+ * @param Mixed $user
+ * @param Mixed $connection
+ */
 function create_user($user, $connection) {
 
     $hashed_pw = md5($user['password']);
@@ -128,4 +146,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 </div>
 <?php require 'template/footer.php'; ?>
-        

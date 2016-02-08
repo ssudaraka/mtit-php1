@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Basic database configurations and session starter
+ */
+
 session_start();
 
 $hostname = "localhost";

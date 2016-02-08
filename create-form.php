@@ -1,6 +1,12 @@
 <?php require_once 'config.php'; ?>
 <?php
 
+/**
+ * Method to build the HTML input field tags.
+ * 
+ * @param Int $index Array index of the $_POST array
+ * @return String 
+ */
 function get_form_string($index) {
     switch ($_POST['field_type'][$index]) {
         case 'TEXT':
@@ -29,7 +35,7 @@ function get_form_string($index) {
             $string .= "</td></tr>";
             return $string;
         case 'SUBM':
-            $string = "<tr><td></td><td><input type='submit' name='{$_POST['field_name'][$index]}' value='{$_POST['field_name'][$index]}'></td></tr>";
+            $string = "<tr><td></td><td><input type='submit' name='{$_POST['field_name'][$index]}' value='{$_POST['field_title'][$index]}'></td></tr>";
             return $string;
         case 'TXTA':
             $string = "<tr><td>{$_POST['field_title'][$index]}:</td><td><textarea name='{$_POST['field_name'][$index]}'></textarea></td></tr>";
@@ -48,19 +54,70 @@ function get_form_string($index) {
     }
 }
 
+/**
+ * Method to create a form in the database.
+ * 
+ * @param String $title Title of the form
+ * @param String $time Time of the form created
+ * @param String $user_email User's email address
+ * @param Mixed $connection DB Connection
+ * @return Int Newly created form's ID
+ */
+function create_form($title, $time, $user_email, $connection){
+    $sql = "INSERT INTO `forms` (`form_title`, `created_time`, `users_email`) VALUES "
+            . "('{$title}', '{$time}', '{$user_email}')";
+
+    $connection->query($sql);
+    return $connection->insert_id;
+}
+
+/**
+ * Method to add the form field information to database.
+ * 
+ * @param Int $form_id
+ * @param String $user_email
+ * @param String $field_type
+ * @param String $field_name
+ * @param Int $order
+ * @param String $options
+ * @param Mixed $connection
+ */
+function save_field($form_id, $user_email, $field_type, $field_title, $field_name, $order, $options, $connection){
+    $sql = "INSERT INTO `forms_fields` (`forms_id`, `forms_users_email`, `fields_type`, `field_title`, `field_name`, "
+            . "`form_order`, `options`) VALUES ({$form_id}, '{$user_email}', '{$field_type}', "
+            . "'{$field_title}', '{$field_name}', $order, '{$options}')";
+            
+    $connection->query($sql);
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $form_string = null;
     $form_error = array();
     if (!isset($_POST['field_type'])) {
         $form_error['nofields'] = "Form needs atleast one form field to be generated.";
     } else {
+        
+        $form_id = null;
+        
+        if(isset($_SESSION['user_email'])) {
+            $form_id = create_form($_POST['form_name'], date("Y-m-d H:i:s"), $_SESSION['user_email'], $connection);
+        }
+        
         $form_string = "<h2>{$_POST['form_name']}</h2><form>";
         $form_string .= "<table>";
         for ($i = 0; $i < count($_POST['field_type']); $i++) {
             $form_string .= get_form_string($i);
+
+            if ($form_id) {
+                save_field($form_id, $_SESSION['user_email'], $_POST['field_type'][$i], $_POST['field_title'][$i], $_POST['field_name'][$i], $i+1, $_POST['field_options'][$i], $connection);
+            }
+            
         }
         $form_string .= "</table>";
         $form_string .= "</form>";
+
+        $_SESSION['form_title'] = $_POST['form_name'];
+        $_SESSION['form_string'] = $form_string;
     }
 }
 ?>
@@ -126,13 +183,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <div class="panel-body">
                         <p>
-                            <a href="#">Download HTML page</a>
+                            <a href="download-form.php">Download HTML page</a>
                         </p>
                         <br />
                         <code>
                             <?php echo htmlspecialchars($form_string); ?>
                         </code>
-                        
+
                     </div>
                 </div>
             </div>

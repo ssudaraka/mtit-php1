@@ -1,4 +1,9 @@
-<?php require_once 'config.php'; ?>
+ <?php 
+ /**
+  * Basic page to show that user registration is successful.
+  */
+ 
+ require_once 'config.php'; ?>
 <?php require 'template/header.php'; ?>
 <?php require 'template/navigation.php'; ?>
 <div class="container">
